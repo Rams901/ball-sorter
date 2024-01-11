@@ -25,4 +25,5 @@ The BallSorter environment has several helper functions supporting its functiona
 # Agents Used
 Using Stable Baseline 3, the approach involved several algorithms used such as PPO, A2C, TRPO.
 TRPO was the best model to reach rewarding results in shorter steps.
+<img width="893" caption = "Tensorboard Tracking Models Training in Real Time" alt="Screenshot 2024-01-11 at 10 50 32 AM" src="https://github.com/Rams901/ball-sorter/assets/47258547/76bb6491-6505-4648-b652-9ae0537f1202">
 
