@@ -9,39 +9,8 @@ from ball_sorter_op import optimal_n_moves
 N_BALLS = 4
 
 
-
-# Switch + Check if it's Reaching Bounding Box.
-# What if it only chooses a ball position
-# And will get penalized if there are no balls near the position?
-# Will That work?
-# if it chooses 4, where do we take the ball from? 3 or 5? Does that make sense? I think this negates that method
-# When choosing a different position, the surrounding for it (left/Right) should have balls or will get negative rewards
-# Does it always take two consecutive actions? A curr position choice and then a move to make?
-# NEW APPROACH:
-# -2: Add ball left
-# -1: Add ball right
-# 0: Switch to position index 0
-# ...
-# n: Switch to position index n
-# Experiment with the new approach and see what happens.
-# How can the agent look at all different balls at once?
-# 0, 0, 4, 0  -> Does it start always in position 0 or in the current position?
-# If starting at the curr position: 
-# Switch to Right
-# Switch to Left
-# No Move
-# No move, No move, Right, No move -> No Move, No move, Left, No Move -> No move, left, left, No move -> 1, 1, 1, 1.
-# on each round, it will iterate through the different positions! Awesome.
-
 # Sealing
-def swap_ball(observation, curr_position, move):
-    
 
-    observation[curr_position+move] += 1
-
-    observation[curr_position] -= 1
-    
-    return observation
 
 class BallSorter(gym.Env):
 
@@ -57,11 +26,20 @@ class BallSorter(gym.Env):
         self.action_space = spaces.Discrete(3)
 
         self.observation_space = spaces.Box(low = 0, high = self.n, shape = (self.n, ), dtype = np.int32)
+
     def print_debug_info(self, *x):
         
         if self.debug_state:
             print(", ".join(x))
 
+    def swap_ball(self, observation, curr_position, move):
+    
+        observation[curr_position+move] += 1
+
+        observation[curr_position] -= 1
+        
+        return observation
+    
     def no_balls_foul(self, observation, curr_position):
     
         if observation[curr_position] == 0:
@@ -120,7 +98,7 @@ class BallSorter(gym.Env):
             
             elif self.ball_to_greater_bucket(observation, curr_position, move):
                 reward -= 2
-    # 2, 3, 0, 0, 0 
+
             else:
                 reward -= 1
         
@@ -128,9 +106,7 @@ class BallSorter(gym.Env):
 
             if observation[curr_position] > 1:
                 reward -= 10
-        # it seems to converge to not choosing any move for more rewards
-        # Correlating to the variance to number of optimal moves (might need to adjust after tracking results)
-    # reward += compare_to_optimal_n_moves(observation[0], optimal_moves)
+
 
         return reward, valid
     
@@ -144,22 +120,12 @@ class BallSorter(gym.Env):
 
         match action:
 
-            # No Move
-            # Penalize when it has more than 1 ball
-            # Else do nothing
             case 0:
                 move = 0
 
-            # Reward if on the left has zero balls
-            # Penalize if out of bound
-            # Penalize if curr position has no balls
-            # Put one Ball to the left
             case 1:
                 move = 1
-            # Reward if on the left has zero balls
-            # Penalize if out of bound
-            # Penalize if curr position has no balls
-            # Put one Ball to the right
+
             case 2:
                 move = -1
 
@@ -168,7 +134,7 @@ class BallSorter(gym.Env):
         self.print_debug_info(f"action: {action}, local reward: {loc_reward}, valid: {valid}, current position: {self.curr_position}")
 
         if valid:
-            self.obs = swap_ball(self.obs, self.curr_position, move)
+            self.obs = self.swap_ball(self.obs, self.curr_position, move)
         
         self.print_debug_info(self.obs, np.ones(shape = (len(self.obs,),), dtype = np.int8))
         
@@ -185,7 +151,7 @@ class BallSorter(gym.Env):
             self.curr_position += 1
         
 
-        return self.obs, loc_reward, self.done, False, {}
+        return self.obs, loc_reward / 10, self.done, False, {}
     
     def reset(self, seed = 0):
 
@@ -199,6 +165,7 @@ class BallSorter(gym.Env):
         
         self.obs = observation
         self.print_debug_info(f"OBSERVATION AT RESET: {observation}\nCurr Position: {self.curr_position}\nOptimal Moves: {self.optimal_moves}")
+        
         return observation, {"info": ""}
 
         # We either switch or take a ball from the curr_position to the next

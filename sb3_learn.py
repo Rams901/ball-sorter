@@ -3,6 +3,7 @@ import os
 from BallSorter_class import BallSorter
 import time
 
+from sb3_contrib import TRPO
 
 
 models_dir = f"models/{int(time.time())}/"
@@ -17,11 +18,11 @@ if not os.path.exists(logdir):
 env =  BallSorter()
 env.reset()
 
-model = PPO('MlpPolicy', env, verbose=1, tensorboard_log=logdir)
+model = TRPO('MlpPolicy', env, verbose=1, tensorboard_log=logdir)
 
 TIMESTEPS = 10000
 iters = 0
 while True:
 	iters += 1
-	model.learn(total_timesteps=TIMESTEPS, reset_num_timesteps=False, tb_log_name=f"PPO")
+	model.learn(total_timesteps=TIMESTEPS, reset_num_timesteps=False, tb_log_name=f"TRPO")
 	model.save(f"{models_dir}/{TIMESTEPS*iters}")
