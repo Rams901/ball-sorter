@@ -21,3 +21,8 @@ The operator returns a tuple containing the new observation, local reward, done 
 Functionality:
 
 The BallSorter environment has several helper functions supporting its functionality. The `print_debug_info` function prints debug information to the console. The `swap_ball` function swaps the ball at a given position with the ball at the given moved position. The `no_balls_foul` function checks whether there are no balls in a given position and returns a boolean value. The `out_of_bound` function checks whether a given move is within the bounds of the environment and returns a boolean value. The `ball_to_greater_bucket` function checks whether a ball is being moved to a bucket that already has more balls than the current bucket and returns a boolean value. The `filled_balls` function creates an array of filled buckets.
+
+# Agents Used
+Using Stable Baseline 3, the approach involved several algorithms used such as PPO, A2C, TRPO.
+TRPO was the best model to reach rewarding results in shorter steps.
+
