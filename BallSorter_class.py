@@ -4,13 +4,8 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 
-from ball_sorter_op import optimal_n_moves
 
 N_BALLS = 4
-
-
-# Sealing
-
 
 class BallSorter(gym.Env):
 
@@ -19,8 +14,6 @@ class BallSorter(gym.Env):
         self.seed = 0
         self.debug_state = False
 
-        # It can either add a ball to the right, left
-        # or switch position to another one
         self.n = N_BALLS
         self.moves = 0
         self.action_space = spaces.Discrete(3)
@@ -49,7 +42,28 @@ class BallSorter(gym.Env):
             return 1
     
         return 0
+    
+    def optimal_n_moves(self,):
+        n = self.n
+        init_bucket = self.curr_position
+        buckets = [0] * (n-1)
+        buckets.insert(init_bucket, n)
 
+        moves = 0
+        center = init_bucket
+
+        for i in range(center, n-1):
+            buckets[i+1] =  (n - i -1)
+            buckets[i] -= buckets[i + 1]
+            moves += buckets[i+1]
+
+        for i in range(center, 0, -1):
+            buckets[i-1] = i 
+            buckets[i] -= buckets[i - 1]
+            moves += buckets[i-1]
+
+        return moves
+    
     def out_of_bound(self, observation, curr_position, move):
     
         if ((curr_position+move) >= len(observation) or (curr_position+move) < 0):
@@ -111,12 +125,6 @@ class BallSorter(gym.Env):
         return reward, valid
     
     def step(self, action):
-        
-        # Execute actions:
-        # If we choose to change the curr position, is giving two values or what's the idea here?
-        # This is a two layer type of action
-        # left, right, or change index -> range(N_BALLS); - Reward when chosen to chng index to current one
-        # Is this possible? Is there another way to work on this?
 
         match action:
 
@@ -156,7 +164,7 @@ class BallSorter(gym.Env):
     def reset(self, seed = 0):
 
         self.curr_position = random.randint(0, self.n-1)
-        self.optimal_moves = optimal_n_moves(self.n, self.curr_position)
+        self.optimal_moves = self.optimal_n_moves()
         self.done = False
 
         observation  = [0] * (self.n)
@@ -167,7 +175,3 @@ class BallSorter(gym.Env):
         self.print_debug_info(f"OBSERVATION AT RESET: {observation}\nCurr Position: {self.curr_position}\nOptimal Moves: {self.optimal_moves}")
         
         return observation, {"info": ""}
-
-        # We either switch or take a ball from the curr_position to the next
-
-        # In rewards we lose if the current position doesn't have any balls yet we take right or left position
