@@ -3,11 +3,13 @@ import os
 from BallSorter_class import BallSorter
 import time
 
-from sb3_contrib import TRPO
+from sb3_contrib import QRDQN, TRPO
 
 
-models_dir = f"models/{int(time.time())}/"
-logdir = f"logs/{int(time.time())}/"
+# policy_kwargs = dict(n_quantiles=50)
+
+models_dir = f"models/TRPO_10_obs/"
+logdir = f"logs/TRPO_10_obs/"
 
 if not os.path.exists(models_dir):
 	os.makedirs(models_dir)
@@ -15,14 +17,16 @@ if not os.path.exists(models_dir):
 if not os.path.exists(logdir):
 	os.makedirs(logdir)
 
-env =  BallSorter()
+env =  BallSorter(10)
 env.reset()
+
+# model = TRPO("MlpPolicy", env, verbose=1)
 
 model = TRPO('MlpPolicy', env, verbose=1, tensorboard_log=logdir)
 
-TIMESTEPS = 10000
+TIMESTEPS = 25000
 iters = 0
 while True:
 	iters += 1
-	model.learn(total_timesteps=TIMESTEPS, reset_num_timesteps=False, tb_log_name=f"TRPO")
-	model.save(f"{models_dir}/{TIMESTEPS*iters}")
+	model.learn(total_timesteps=TIMESTEPS, reset_num_timesteps=False, tb_log_name=f"TRPO_4_obs")
+	model.save(f"{models_dir}/{iters}")
