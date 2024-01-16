@@ -114,23 +114,21 @@ class BallSorter(gym.Env):
         if move:
             
             if self.out_of_bound(observation, curr_position, move):
-                reward -= 1.3
+                reward -= 1
                 valid = 0
             
             elif self.no_balls_foul(observation, curr_position):
-                reward -= 1.5
+                reward -= 1
                 valid = 0
 
             elif self.encourage_giving_to_least(observation, move):
-                reward -= 0.2
+                reward += 0.5
 
-            else:
-                reward -= 0.5
         
         else:
 
             if observation[curr_position] > 1:
-                reward -= 1.5
+                reward -= 1
 
         return reward, valid
     
@@ -154,7 +152,7 @@ class BallSorter(gym.Env):
         if valid:
             self.obs[:-1] = self.swap_ball(self.obs[:-1], self.curr_position, move)
         
-        self.print_debug_info(self.obs[:-1], np.ones(shape = (len(self.obs[:-1],),), dtype = np.int8))
+        self.print_debug_info(self.obs[:], np.ones(shape = (len(self.obs[:-1],),), dtype = np.int8))
         
         if  (self.obs[:-1] == 1).all():
             loc_reward += 100
@@ -170,7 +168,7 @@ class BallSorter(gym.Env):
 
         self.obs[-1] = self.curr_position
 
-        return self.obs, loc_reward / 10, self.done, False, {}
+        return self.obs, loc_reward, self.done, False, {}
     
     def reset(self, seed = 0):
 

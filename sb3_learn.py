@@ -8,8 +8,8 @@ from sb3_contrib import QRDQN, TRPO
 
 # policy_kwargs = dict(n_quantiles=50)
 
-models_dir = f"models/TRPO_10_obs/"
-logdir = f"logs/TRPO_10_obs/"
+models_dir = f"models/TRPO_10_obs_v3/"
+logdir = f"logs/TRPO_10_obs_v3/"
 
 if not os.path.exists(models_dir):
 	os.makedirs(models_dir)
@@ -28,5 +28,5 @@ TIMESTEPS = 25000
 iters = 0
 while True:
 	iters += 1
-	model.learn(total_timesteps=TIMESTEPS, reset_num_timesteps=False, tb_log_name=f"TRPO_4_obs")
+	model.learn(total_timesteps=TIMESTEPS, reset_num_timesteps=False, tb_log_name=f"TRPO_10_obs_v3")
 	model.save(f"{models_dir}/{iters}")
