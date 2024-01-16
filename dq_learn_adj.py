@@ -21,10 +21,9 @@ env =  BallSorter(4)
 env.reset()
 model = QRDQN("MlpPolicy", env, verbose=1, tensorboard_log = logdir)
 
-# model = PPO('MlpPolicy', env, verbose=1, ent_coef=0.1,tensorboard_log=logdir)
-
 TIMESTEPS = 25000
 iters = 0
+
 while True:
 	iters += 1
 	model.learn(total_timesteps=TIMESTEPS, reset_num_timesteps=False, tb_log_name=f"QR_DQN_adj")

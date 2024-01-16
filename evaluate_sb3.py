@@ -25,4 +25,3 @@ while True:
 
     if iter > 10000:
         break
-    #   obs, _ = env.reset()

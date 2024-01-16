@@ -25,8 +25,7 @@ The BallSorter environment has several helper functions supporting its functiona
 
 The reward system has been designed to provide feedback to the agent for the different actions taken during training. The agent receives a reward based on:
 
-- Number of moves made: A negative reward is given if the number of moves made is more than the optimal number of moves.
-- Ball to greater bucket: A negative reward is given if the ball being moved is going to a bucket that already has more balls than the current bucket.
+- Ball to the least bucket: A reward is given if the ball being moved is going to a bucket that already has less balls than the bucket on the other direction. (left vs right)
 - Out of bounds: A negative reward is given if the agent moves a ball out of bounds.
 - No balls in current position: A negative reward is given if there are no balls in the current position.
 - Filled balls: A positive reward is given if the agent fills all the balls equally into each bucket.
@@ -36,6 +35,11 @@ The rewards are calculated using a function called `reward_system` and are appli
 Using Stable Baseline 3, the approach involved several algorithms used such as PPO, A2C, TRPO.
 <img width="893" alt="Screenshot 2024-01-11 at 10 50 32 AM" src="https://github.com/Rams901/ball-sorter/assets/47258547/76bb6491-6505-4648-b652-9ae0537f1202">
 Tensorboard Tracking Models Training in Real Time. TRPO was the best model to reach rewarding results in shorter steps.
+
+As of now, The agent solves any number n of buckets.
+It's solving the 10 ball environment in 81 moves. The optimal number of moves in the 10 ball environment is 27.
+That's 3 times slower. Some approaches that can help in reaching the optimal number of moves faster is to adjust the rewards, adjust the hyper parameters of the sb3 model; giving a better explanation to the agent that the goal is find the optimal number of moves. It requires various experiments, some adjustments may mislead the agent and it won't be able to even solve the problem.
+
 
 @misc{stable-baselines, 
   author = {Hill, Ashley and Raffin, Antonin and Ernestus, Maximilian and Gleave, Adam and Kanervisto, Anssi and Traore, Rene and Dhariwal, Prafulla and Hesse, Christopher and Klimov, Oleg and Nichol, Alex and Plappert, Matthias and Radford, Alec and Schulman, John and Sidor, Szymon and Wu, Yuhuai}, 

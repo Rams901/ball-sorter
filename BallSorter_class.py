@@ -8,9 +8,9 @@ N_BALLS = 5
 
 class BallSorter(gym.Env):
 
-    def __init__(self, n_balls, debug_state = False):
+    def __init__(self, n_balls, debug_state = False, seed = 0):
         super(BallSorter, self).__init__()
-        self.seed = 0
+        self.seed = seed
         self.debug_state = debug_state
 
         self.n = n_balls
@@ -171,7 +171,9 @@ class BallSorter(gym.Env):
         return self.obs, loc_reward, self.done, False, {}
     
     def reset(self, seed = 0):
-
+        self.seed = seed
+        random.seed(seed)
+        
         self.curr_position = random.randint(0, self.n-1)
         self.optimal_moves = self.optimal_n_moves()
         self.done = False
