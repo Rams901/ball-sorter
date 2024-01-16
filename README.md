@@ -36,9 +36,10 @@ Using Stable Baseline 3, the approach involved several algorithms used such as P
 <img width="893" alt="Screenshot 2024-01-11 at 10 50 32 AM" src="https://github.com/Rams901/ball-sorter/assets/47258547/76bb6491-6505-4648-b652-9ae0537f1202">
 Tensorboard Tracking Models Training in Real Time. TRPO was the best model to reach rewarding results in shorter steps.
 
+# Results
 As of now, The agent solves any number n of buckets.
 It's solving the 10 ball environment in 81 moves. The optimal number of moves in the 10 ball environment is 27.
-That's 3 times slower. Some approaches that can help in reaching the optimal number of moves faster is to adjust the rewards, adjust the hyper parameters of the sb3 model; giving a better explanation to the agent that the goal is find the optimal number of moves. It requires various experiments, some adjustments may mislead the agent and it won't be able to even solve the problem.
+That's 3 times slower. Some approaches that can help in reaching the optimal number of moves faster is to adjust the rewards, adjust the hyper parameters of the sb3 model; giving a better explanation to the agent that the goal is to find the optimal number of moves. It requires various experiments, some adjustments may mislead the agent and it won't be able to even solve the problem. So, careful testing, saving previous states and tracking the agent behaviour are all necessary for proper learning & optimization.
 
 
 @misc{stable-baselines, 
