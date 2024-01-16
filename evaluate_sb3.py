@@ -1,7 +1,5 @@
 from stable_baselines3 import PPO, A2C
-import os
 from BallSorter_class import BallSorter
-import time
 
 from sb3_contrib import TRPO
 
